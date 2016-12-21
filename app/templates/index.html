@@ -37,13 +37,29 @@
             <hr>
             {% endfor %}
 
+
             <!-- Pager -->
+
             <ul class="pager">
-                <li class="next">
-                    <a href="#">Older Posts &rarr;</a>
+                {% if hasOlderBlog %}
+                <li class="previous">
+                    {% set previousUrl = '/?offset=' ~ (offset+limit) ~ '&limit=' ~ limit %}
+                    <a href={{ previousUrl }}>&larr; Older Posts </a>
                 </li>
+                {% endif %}
+                {% if hasNewerBlog %}
+                <li class="next">
+                    {% set nextUrl = '/?offset=' ~ (offset-limit) ~ '&limit=' ~ limit %}
+                    <a href={{ nextUrl }}>Next Posts &rarr;</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </div>
 {% endblock%}
+
+<!--auto scroll-->
+{% block script%}
+<script src="/static/jscroll/jquery.jscroll.min.js"></script>
+{% endblock %}
