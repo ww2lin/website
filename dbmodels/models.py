@@ -56,3 +56,5 @@ class Blog(db.Model):
         self.content = content
         self.user_id = user_id
 
+    def __repr__(self):
+        return "<Blog id:%r title:%r>" % (self.id, self.title)
