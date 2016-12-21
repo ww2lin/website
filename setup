@@ -1,0 +1,2 @@
+. ../website-env/website/bin/activate
+export PYTHONPATH=${PYTHONPATH}:~/Documents/projects/website
