@@ -12,4 +12,3 @@ ww2lin_webSite.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
 # DB configuration.
 db = SQLAlchemy(ww2lin_webSite)
-

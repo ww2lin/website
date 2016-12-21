@@ -16,6 +16,8 @@ def about(id=1):
 def blog(id=1):
     blog = Blog.query.get(id)
     user = User.query.get(blog.user_id)
+
+
     return render_template('blog.html', user=user, blog=blog)
 
 @ww2lin_webSite.route('/contact')
