@@ -12,7 +12,6 @@ class Populate(object):
         with ww2lin_webSite.app_context():
             for user in USER_LIST:
                 user['password'] = encrypt_password(user['password'])
-                print user
                 user_datastore.create_user(**user)
             db.session.commit()
 

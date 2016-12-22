@@ -13,7 +13,7 @@ ww2lin_webSite.config['SECURITY_CONFIRMABLE'] = True
 ww2lin_webSite.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 #password hash
 ww2lin_webSite.config['SECURITY_PASSWORD_HASH'] = 'sha512_crypt'
-ww2lin_webSite.config['SECURITY_PASSWORD_SALT'] = 'fhasdgihwntlgy8f'
+ww2lin_webSite.config['SECURITY_PASSWORD_SALT'] = 'this is some random salt :)'
 
 #db
 ww2lin_webSite.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
