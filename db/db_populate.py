@@ -2,15 +2,19 @@ import sys
 
 from default_config import USER_LIST, BLOG_LIST
 from dbmodels.models import *
+from flask_security.utils import encrypt_password
 
 class Populate(object):
     """Populate class which contains methods to pre-insert meta data to database.
     """
     @classmethod
     def user(cls):
-        for user in USER_LIST:
-            user_datastore.create_user(**user)
-
+        with ww2lin_webSite.app_context():
+            for user in USER_LIST:
+                user['password'] = encrypt_password(user['password'])
+                print user
+                user_datastore.create_user(**user)
+            db.session.commit()
 
     @classmethod
     def blog(cls):

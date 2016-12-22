@@ -1,18 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 USER_LIST = [{
     'username': 'admin',
-    'email': 'admin',
+    'email': 'admin@admin.com',
     'password': 'admin',
     'first_name': 'admin',
     'last_name': 'admin',
     'active': True,
+    'confirmed_at': datetime(2016, 12, 22, 20, 1, 51),
     'roles': ['admin']
-    },
+},
     {
         'username': 'user',
-        'email': 'user',
+        'email': 'user@user.com',
         'password': 'user',
         'first_name': 'user',
         'last_name': 'user',

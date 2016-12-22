@@ -6,10 +6,16 @@ ww2lin_webSite = Flask(__name__)
 ww2lin_webSite.config['DEBUG'] = True
 
 ww2lin_webSite.config['SECRET_KEY'] = 'super-secret'
-# ww2lin_webSite.config['SECURITY_REGISTERABLE'] = True
-ww2lin_webSite.config['SECURITY_CONFIRMABLE'] = False
-ww2lin_webSite.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 
+#account creation
+ww2lin_webSite.config['SECURITY_REGISTERABLE'] = True
+ww2lin_webSite.config['SECURITY_CONFIRMABLE'] = True
+ww2lin_webSite.config['SECURITY_SEND_REGISTER_EMAIL'] = False
+#password hash
+ww2lin_webSite.config['SECURITY_PASSWORD_HASH'] = 'sha512_crypt'
+ww2lin_webSite.config['SECURITY_PASSWORD_SALT'] = 'fhasdgihwntlgy8f'
+
+#db
 ww2lin_webSite.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
 # DB configuration.

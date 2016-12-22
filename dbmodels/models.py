@@ -25,14 +25,6 @@ class User(db.Model, UserMixin):
                             backref=db.backref('users', lazy='dynamic'))
     blog = db.relationship('Blog')
 
-    # def __init__(self, username, email, password):
-    #     self.username = username
-    #     self.email = email
-    #     self.password = password
-    #
-    def create(self, **kwargs):
-        user_datastore.create_user(kwargs)
-
     def __repr__(self):
         return "<User %r>" % self.username
 
