@@ -1,7 +1,7 @@
-from app.view.content_view import ww2lin_webSite
+from app.view.content_view import app_webSite
 
 
 if __name__ == "__main__":
-    ww2lin_webSite.run()
+    app_webSite.run()
 
 

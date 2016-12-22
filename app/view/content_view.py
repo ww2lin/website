@@ -5,8 +5,8 @@ from temp.models import *
 
 BLOG_PAGE_LIMIT = 3
 
-@ww2lin_webSite.route('/')
-@ww2lin_webSite.route('/<message>')
+@app_webSite.route('/')
+@app_webSite.route('/<message>')
 def index(message=None):
     # handle new blog submissions
     if message == 'success':
@@ -30,27 +30,27 @@ def index(message=None):
                            hasNewerBlog=hasNewerBlog,
                            message=message)
 
-@ww2lin_webSite.route('/about')
-@ww2lin_webSite.route('/about/<int:id>')
+@app_webSite.route('/about')
+@app_webSite.route('/about/<int:id>')
 def about():
     return render_template('about.html')
 
-@ww2lin_webSite.route('/blog/<int:id>')
+@app_webSite.route('/blog/<int:id>')
 def blog(id=1):
     blog = Blog.query.get(id)
     user = User.query.get(blog.user_id)
     return render_template('blogdetails.html', user=user, blog=blog)
 
-@ww2lin_webSite.route('/contact')
+@app_webSite.route('/contact')
 def contact():
     return render_template("contact.html")
 
-@ww2lin_webSite.route('/postblog')
+@app_webSite.route('/postblog')
 @login_required
 def postblog():
     return render_template("postblog.html")
 
-@ww2lin_webSite.route('/submitblog', methods=['POST'])
+@app_webSite.route('/submitblog', methods=['POST'])
 @login_required
 def submitblog():
     title = request.form["title"]
@@ -64,7 +64,7 @@ def submitblog():
         result = 'success'
     return redirect('/'+result)
 
-@ww2lin_webSite.route('/moreblog', methods=['POST'])
+@app_webSite.route('/moreblog', methods=['POST'])
 def moreblog():
     offset = request.form['offset']
     tuples = None
@@ -81,17 +81,17 @@ def moreblog():
     return jsonify({"nextOffset": offset, "limit" : BLOG_PAGE_LIMIT, "bloghtml": render_template("bloglist.html", tuples=tuples)})
 
 #register
-@user_registered.connect_via(ww2lin_webSite)
-def user_registered_sighandler(ww2lin_webSite, user, confirm_token):
+@user_registered.connect_via(app_webSite)
+def user_registered_sighandler(app_webSite, user, confirm_token):
     role = user_datastore.find_or_create_role(USER)
     user_datastore.add_role_to_user(user, role)
     db.session.commit()
 
 #error routes
-@ww2lin_webSite.errorhandler(404)
+@app_webSite.errorhandler(404)
 def page_not_found(error):
     return render_template('/error/404.html'), 404
 
-@ww2lin_webSite.errorhandler(500)
+@app_webSite.errorhandler(500)
 def internal_server_error(error):
     return render_template('/error/500.html'), 500

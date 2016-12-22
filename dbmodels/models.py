@@ -1,4 +1,4 @@
-from app import db, ww2lin_webSite
+from app import db, app_webSite
 from flask_security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
 
 # Define models
@@ -48,7 +48,7 @@ class Blog(db.Model):
 
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(ww2lin_webSite, user_datastore)
+security = Security(app_webSite, user_datastore)
 
 def initData():
     user_datastore.create_role(name=ADMIN)

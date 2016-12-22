@@ -9,7 +9,7 @@ class Populate(object):
     """
     @classmethod
     def user(cls):
-        with ww2lin_webSite.app_context():
+        with app_webSite.app_context():
             for user in USER_LIST:
                 user['password'] = encrypt_password(user['password'])
                 user_datastore.create_user(**user)
