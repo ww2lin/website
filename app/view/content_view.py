@@ -1,39 +1,28 @@
 from app import ww2lin_webSite
-from flask import render_template , request
+from flask import render_template, request
 from dbmodels.models import *
+from flask import jsonify
+
 
 BLOG_PAGE_LIMIT = 3
 
 @ww2lin_webSite.route('/')
 def index():
 
-    # user = User.query.get(1)
     offset = request.args.get("offset", 1, int)
-    limit = request.args.get("limit", BLOG_PAGE_LIMIT, int)
 
-    tuples = db.session.query(User, Blog).join(Blog).order_by(Blog.id.desc()).offset(offset).limit(limit)
+    tuples = db.session.query(User, Blog).join(Blog).order_by(Blog.id.desc()).offset(offset).limit(BLOG_PAGE_LIMIT)
 
 
     # Try to get offset-1 and limit + 1 pages, to determine if previous/next page is available for pagination
-    hasOlderBlog = True if Blog.query.order_by(Blog.id.desc()).offset(offset+limit).first() else False
+    hasOlderBlog = True if Blog.query.order_by(Blog.id.desc()).offset(offset+BLOG_PAGE_LIMIT).first() else False
     hasNewerBlog = offset > 1 and tuples.count() > 0
 
-    print Blog.query.order_by(Blog.id.desc()).offset(offset+limit).first()
-
-    return render_template('index.html', tuples=tuples,
+    return render_template('bloglistwrapper.html', tuples=tuples,
                            offset=offset,
-                           limit=limit,
+                           limit=BLOG_PAGE_LIMIT,
                            hasOlderBlog=hasOlderBlog,
                            hasNewerBlog=hasNewerBlog)
-
-
-    # record_query = Blog.query.paginate(offset, limit, False).join(User)
-    # total = record_query.total
-    # record_items = record_query.items
-    #
-    # nextPage = offset + limit
-    # return render_template('index.html', tuples=record_items, user=user)
-
 
 @ww2lin_webSite.route('/about')
 @ww2lin_webSite.route('/about/<int:id>')
@@ -44,9 +33,28 @@ def about(id=1):
 def blog(id=1):
     blog = Blog.query.get(id)
     user = User.query.get(blog.user_id)
-    return render_template('blog.html', user=user, blog=blog)
+    return render_template('blogdetails.html', user=user, blog=blog)
 
 @ww2lin_webSite.route('/contact')
 def contact():
     return render_template("contact.html")
+
+@ww2lin_webSite.route('/moreblog', methods=['POST'])
+def moreblog():
+
+    offset = request.form['offset']
+    tuples = None
+    if offset.isdigit():
+        offset = int(offset)
+        tuples = db.session.query(User, Blog).join(Blog).order_by(Blog.id.desc()).offset(offset).limit(BLOG_PAGE_LIMIT)
+
+        if not Blog.query.order_by(Blog.id.desc()).offset(int(offset)+BLOG_PAGE_LIMIT).first():
+            offset = -1
+        else:
+            offset = offset + BLOG_PAGE_LIMIT
+    else:
+        offset = -1;
+    print offset
+    return jsonify({"nextOffset": offset, "limit" : BLOG_PAGE_LIMIT, "bloghtml": render_template("bloglist.html", tuples=tuples)})
+
 

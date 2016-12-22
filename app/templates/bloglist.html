@@ -1,0 +1,16 @@
+{% for user, blog in tuples %}
+    <div class="post-preview">
+        <a href="blog/{{blog.id}}">
+            <h2 class="post-title">
+                {{ blog.title }}
+            </h2>
+            {% if blog.header is not none %}
+            <h3 class="post-subtitle">
+                {{ blog.header }}
+            </h3>
+            {% endif %}
+        </a>
+        <p class="post-meta">Posted by <a href="/about/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a> on {{blog.created}}</p>
+    </div>
+    <hr>
+{% endfor %}

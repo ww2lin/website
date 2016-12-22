@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Page Header -->
+<!-- Set your background image for this header on the line below. -->
+<header class="intro-header" style="background-image: url('/static/img/home-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading">
+                    <h1>Blog Spot</h1>
+                    <hr class="small">
+                    <span class="subheading">A spot for blogs :)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+            <div id="bloglist">
+                {% include "bloglist.html" %}
+            </div>
+
+            <div id="loader" class="loader"></div>
+            <!-- Pager -->
+            <!--<ul class="pager">-->
+                <!--{% if hasOlderBlog %}-->
+                    <!--<li class="previous">-->
+                        <!--{% set previousUrl = '/?offset=' ~ (offset+limit) %}-->
+                        <!--<a id="previous" href={{ previousUrl }}>&larr; Older Blogs </a>-->
+                    <!--</li>-->
+                <!--{% endif %}-->
+                <!--{% if hasNewerBlog %}-->
+                <!--<li class="next">-->
+                    <!--{% set nextUrl = '/?offset=' ~ (offset-limit) %}-->
+                    <!--<a id="next" href={{ nextUrl }}>Next Blogs &rarr;</a>-->
+                <!--</li>-->
+                <!--{% endif %}-->
+            <!--</ul>-->
+        </div>
+    </div>
+
+</div>
+{% endblock%}
+
+<!--auto scroll-->
+{% block script%}
+<script type="text/javascript" src="/static/js/is-view-visible.js"></script>
+<script type="text/javascript">
+    var Utils = new Utils();
+    var requestingData = false;
+    var nextOffset = {{ offset + limit }};
+    $(function(){
+      $(window).scroll(function(){
+        var isElementInView = Utils.isElementInView($('#loader'), false);
+        if (nextOffset >= 1){
+            if (isElementInView && !requestingData) {
+                requestingData = true;
+                          $.ajax ({
+                   data : {
+                        'offset': nextOffset
+                   },
+                   type: 'POST',
+                   url: '/moreblog'
+                }).done(function(data){
+                    //$('#previous').prop("href", "/?offset="+ (data.nextOffset));
+                    $('#bloglist').append(data.bloghtml);
+                    requestingData = false
+                    nextOffset = data.nextOffset
+                })
+            }
+        }else {
+            $('#loader').hide()
+        }
+
+      });
+    });
+
+
+</script>
+{% endblock %}
