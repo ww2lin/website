@@ -1,5 +1,5 @@
-from app import db
-from flask_security import UserMixin, RoleMixin
+from app import db, ww2lin_webSite
+from flask_security import UserMixin, RoleMixin, SQLAlchemyUserDatastore, Security
 
 # Define models
 roles_users = db.Table('roles_users',
@@ -58,3 +58,7 @@ class Blog(db.Model):
 
     def __repr__(self):
         return "<Blog id:%r title:%r>" % (self.id, self.title)
+
+# Setup Flask-Security
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(ww2lin_webSite, user_datastore)

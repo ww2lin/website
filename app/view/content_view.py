@@ -1,7 +1,6 @@
 from flask import render_template, request, jsonify, redirect
-from flask_security import login_required, current_user
-from app import ww2lin_webSite
 from dbmodels.models import *
+from flask_security import login_required, current_user
 from temp.models import *
 
 BLOG_PAGE_LIMIT = 3
