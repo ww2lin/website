@@ -1,19 +1,24 @@
+from flask import render_template, request, jsonify, redirect
+from flask_security import login_required, current_user
 from app import ww2lin_webSite
-from flask import render_template, request
-from flask_security import login_required
 from dbmodels.models import *
-from flask import jsonify
-
+from temp.models import *
 
 BLOG_PAGE_LIMIT = 3
 
 @ww2lin_webSite.route('/')
-def index():
+@ww2lin_webSite.route('/<message>')
+def index(message=None):
+    # handle new blog submissions
+    if message == 'success':
+        message = Message("success", "Success!", "You blog has been submitted.")
+    elif message == 'fail':
+        message = Message("warning", "Warning!", "You blog is not submitted due to missing title/content")
+    else:
+        message = None
 
-    offset = request.args.get("offset", 1, int)
-
+    offset = request.args.get("offset", 0, int)
     tuples = db.session.query(User, Blog).join(Blog).order_by(Blog.id.desc()).offset(offset).limit(BLOG_PAGE_LIMIT)
-
 
     # Try to get offset-1 and limit + 1 pages, to determine if previous/next page is available for pagination
     hasOlderBlog = True if Blog.query.order_by(Blog.id.desc()).offset(offset+BLOG_PAGE_LIMIT).first() else False
@@ -23,11 +28,12 @@ def index():
                            offset=offset,
                            limit=BLOG_PAGE_LIMIT,
                            hasOlderBlog=hasOlderBlog,
-                           hasNewerBlog=hasNewerBlog)
+                           hasNewerBlog=hasNewerBlog,
+                           message=message)
 
 @ww2lin_webSite.route('/about')
 @ww2lin_webSite.route('/about/<int:id>')
-def about(id=1):
+def about():
     return render_template('about.html')
 
 @ww2lin_webSite.route('/blog/<int:id>')
@@ -40,10 +46,24 @@ def blog(id=1):
 def contact():
     return render_template("contact.html")
 
-@ww2lin_webSite.route('/newblog')
+@ww2lin_webSite.route('/postblog')
 @login_required
-def newblog():
-    return "here"
+def postblog():
+    return render_template("postblog.html")
+
+@ww2lin_webSite.route('/submitblog', methods=['POST'])
+@login_required
+def submitblog():
+    title = request.form["title"]
+    header = request.form["header"]
+    content = request.form["content"]
+    result = 'fail'
+    if title is not None and content is not None:
+        newblog = Blog(title, content, current_user.id, header)
+        db.session.add(newblog)
+        db.session.commit()
+        result = 'success'
+    return redirect('/'+result)
 
 @ww2lin_webSite.route('/moreblog', methods=['POST'])
 def moreblog():
@@ -56,9 +76,17 @@ def moreblog():
         if not Blog.query.order_by(Blog.id.desc()).offset(int(offset)+BLOG_PAGE_LIMIT).first():
             offset = -1
         else:
-            offset = offset + BLOG_PAGE_LIMIT
+            offset += BLOG_PAGE_LIMIT
     else:
         offset = -1;
     return jsonify({"nextOffset": offset, "limit" : BLOG_PAGE_LIMIT, "bloghtml": render_template("bloglist.html", tuples=tuples)})
 
 
+#error routes
+@ww2lin_webSite.errorhandler(404)
+def page_not_found(error):
+    return render_template('/error/404.html'), 404
+
+@ww2lin_webSite.errorhandler(500)
+def internal_server_error(error):
+    return render_template('/error/500.html'), 500

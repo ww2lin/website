@@ -1,0 +1,13 @@
+.sticky {
+  background: #bada55;
+  color: white;
+  font-family: Droid Sans;
+  font-size: 18px;
+  line-height: 1.6em;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  width:100%;
+  box-sizing:border-box;
+}
