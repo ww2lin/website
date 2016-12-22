@@ -1,5 +1,6 @@
 from app import ww2lin_webSite
 from flask import render_template, request
+from flask_security import login_required
 from dbmodels.models import *
 from flask import jsonify
 
@@ -38,6 +39,11 @@ def blog(id=1):
 @ww2lin_webSite.route('/contact')
 def contact():
     return render_template("contact.html")
+
+@ww2lin_webSite.route('/newblog')
+@login_required
+def newblog():
+    return "here"
 
 @ww2lin_webSite.route('/moreblog', methods=['POST'])
 def moreblog():
