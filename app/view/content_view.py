@@ -41,7 +41,6 @@ def contact():
 
 @ww2lin_webSite.route('/moreblog', methods=['POST'])
 def moreblog():
-
     offset = request.form['offset']
     tuples = None
     if offset.isdigit():
@@ -54,7 +53,6 @@ def moreblog():
             offset = offset + BLOG_PAGE_LIMIT
     else:
         offset = -1;
-    print offset
     return jsonify({"nextOffset": offset, "limit" : BLOG_PAGE_LIMIT, "bloghtml": render_template("bloglist.html", tuples=tuples)})
 
 
