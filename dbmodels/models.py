@@ -25,18 +25,13 @@ class User(db.Model, UserMixin):
                             backref=db.backref('users', lazy='dynamic'))
     blog = db.relationship('Blog')
 
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
-        self.password = password
-
-    def __init__(self, username, email, password, first_name, last_name, active):
-        self.username = username
-        self.email = email
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
-        self.active = active
+    # def __init__(self, username, email, password):
+    #     self.username = username
+    #     self.email = email
+    #     self.password = password
+    #
+    def create(self, **kwargs):
+        user_datastore.create_user(kwargs)
 
     def __repr__(self):
         return "<User %r>" % self.username
@@ -62,3 +57,11 @@ class Blog(db.Model):
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(ww2lin_webSite, user_datastore)
+
+def initData():
+    user_datastore.create_role(name=ADMIN)
+    user_datastore.create_role(name=USER)
+
+#Roles
+ADMIN = 'admin'
+USER = 'user'

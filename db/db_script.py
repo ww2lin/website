@@ -10,11 +10,15 @@ from db_config import SQLALCHEMY_MIGRATE_REPO
 
 def _createDB(dryrun):
     db.create_all()
+
     if not os.path.exists(SQLALCHEMY_MIGRATE_REPO):
         api.create(SQLALCHEMY_MIGRATE_REPO, 'database repository')
         api.version_control(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
     else:
         api.version_control(SQLALCHEMY_DATABASE_URI, SQLALCHEMY_MIGRATE_REPO)
+
+    initData()
+    db.session.commit()
 
 def _generateMigrationScript(dryrun):
     newVersion = findMaxAvailableVersion() + 1

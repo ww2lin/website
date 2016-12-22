@@ -1,8 +1,7 @@
 import sys
 
-from app import db
 from default_config import USER_LIST, BLOG_LIST
-from dbmodels import models
+from dbmodels.models import *
 
 class Populate(object):
     """Populate class which contains methods to pre-insert meta data to database.
@@ -10,13 +9,13 @@ class Populate(object):
     @classmethod
     def user(cls):
         for user in USER_LIST:
-            entry = models.User(**user)
-            db.session.add(entry)
+            user_datastore.create_user(**user)
+
 
     @classmethod
     def blog(cls):
         for blog in BLOG_LIST:
-            entry = models.Blog(**blog)
+            entry = Blog(**blog)
             db.session.add(entry)
 
 class RebuildDB(object):
@@ -49,6 +48,7 @@ class RebuildDB(object):
         """Initiate a new database. It will purge all tables and build new ones.
         """
         cls._purgeTables()
+        initData()
         cls._populateTables()
         print 'DB initialization finished!'
 

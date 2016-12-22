@@ -7,6 +7,8 @@ ww2lin_webSite.config['DEBUG'] = True
 
 ww2lin_webSite.config['SECRET_KEY'] = 'super-secret'
 # ww2lin_webSite.config['SECURITY_REGISTERABLE'] = True
+ww2lin_webSite.config['SECURITY_CONFIRMABLE'] = False
+ww2lin_webSite.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 
 ww2lin_webSite.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 

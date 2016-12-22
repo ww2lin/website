@@ -1,6 +1,6 @@
 from flask import render_template, request, jsonify, redirect
 from dbmodels.models import *
-from flask_security import login_required, current_user
+from flask_security import login_required, current_user, user_registered
 from temp.models import *
 
 BLOG_PAGE_LIMIT = 3
@@ -79,6 +79,13 @@ def moreblog():
     else:
         offset = -1;
     return jsonify({"nextOffset": offset, "limit" : BLOG_PAGE_LIMIT, "bloghtml": render_template("bloglist.html", tuples=tuples)})
+
+#register
+@user_registered.connect_via(ww2lin_webSite)
+def user_registered_sighandler(ww2lin_webSite, user, confirm_token):
+    role = user_datastore.find_or_create_role(USER)
+    assignedrole = user_datastore.add_role_to_user(user, role)
+    db.session.commit()
 
 
 #error routes

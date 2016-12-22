@@ -2,13 +2,24 @@
 # -*- coding: utf-8 -*-
 
 USER_LIST = [{
-    'username': 'test',
-    'email': 'test@test.com',
-    'password': '123',
-    'first_name': 'Test',
-    'last_name': 'Bug',
-    'active': True
-}]
+    'username': 'admin',
+    'email': 'admin',
+    'password': 'admin',
+    'first_name': 'admin',
+    'last_name': 'admin',
+    'active': True,
+    'roles': ['admin']
+    },
+    {
+        'username': 'user',
+        'email': 'user',
+        'password': 'user',
+        'first_name': 'user',
+        'last_name': 'user',
+        'active': True,
+        'roles': ['user']
+    }
+]
 
 BLOG_LIST = [
     {
